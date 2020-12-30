@@ -1,7 +1,5 @@
 # Operating Systems Homework #1
 ## Thread Management
-
----
 ### Motivation
 
 From the source code of `nachos-4.0/code/test/test1.c` and n`achos-4.0/code/test/test2.c`, one should expect to execute `test1.c`, the results will be a  series of decreasing numbers 9, 8, 7, 6, and execute test2.c the results will be a series of increasing numbers 20, 21, 22, 23, 24, 25. But when we execute the multiprogramming command: `./nachos -e ../test/test1 -e ../test/test2`, the result of test1.c becomes increasing in the end. This is because Nachos is using a one to one mapping scheme, which means that only uniprogramming is supported, and we have only a single page table. All process will use the same page table and therefore will map to the same physical page. If multiprogramming is implemented this scheme must be changed. In multiprogramming, this is an issue because the processes will execute the same code segment. We have to modify `nachos-4.0/code/userprog/addrspace.cc` and `nachos-4.0/code/userprog/addrspace.h` which creates the page table for a process. We find that in the AddrSpace constructor, the virtual and the physical page has the same number. We have to change this when implementing multiprogramming.
