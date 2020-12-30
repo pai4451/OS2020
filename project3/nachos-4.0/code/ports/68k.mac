@@ -1,0 +1,2 @@
+# Apple Macintosh 68k, System 7
+HOST = -D68K -DSYS7 -DHOST_IS_BIG_ENDIAN

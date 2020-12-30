@@ -1,0 +1,4 @@
+# CPU = x86, OS = NetBSD
+HOST = -Dx86 -DNetBSD -DBSD
+CPP=/usr/bin/cpp
+DISASM = disasm

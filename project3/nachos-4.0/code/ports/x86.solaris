@@ -1,0 +1,3 @@
+# CPU = x86, OS = Solaris
+HOST = -Dx86 -DSOLARIS
+DISASM = disasm

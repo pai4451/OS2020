@@ -1,0 +1,4 @@
+# CPU = x86, OS = FreeBSD
+HOST = -Dx86 -DFreeBSD -DBSD
+CPP=/usr/bin/cpp
+DISASM = disasm

@@ -1,0 +1,5 @@
+# SUN SPARC, Solaris 2.4
+HOST = -DSPARC -DSOLARIS -DHOST_IS_BIG_ENDIAN
+CPP = /usr/ccs/lib/cpp
+CPP_AS_FLAGS = -D_ASM
+LDFLAGS = -lsocket -lnsl

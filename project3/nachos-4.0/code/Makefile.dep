@@ -1,0 +1,3 @@
+# CPU = x86, OS = linux
+HOST = -Dx86 -DLINUX -DBSD
+DISASM = disasm
