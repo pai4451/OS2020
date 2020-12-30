@@ -5,11 +5,14 @@ Course website: http://cc.ee.ntu.edu.tw/~farn/courses/OS/OS2020/index.htm<br>
 
 ---
 ## Download & Install VirtualBox
+
 * Oracle VM VirtualBox
     * https://www.virtualbox.org/
 * Download 32-bit Ubuntu 14.04
     * http://releases.ubuntu.com/14.04/
+
 ---
+
 ## Setup
 Install g++ and csh
 ```
@@ -22,7 +25,9 @@ Download NachOS & Cross Compiler
 wget -d http://cc.ee.ntu.edu.tw/~farn/courses/OS/OS2015/projects/project.1/nachos-4.0.tar.gz
 wget -d http://cc.ee.ntu.edu.tw/~farn/courses/OS/OS2015/projects/project.1/mips-x86.linux-xgcc.tar.gz
 ```
+
 ---
+
 ## Install NachOS
 untar **nachos-4.0.tar.gz**
 ```
@@ -49,7 +54,9 @@ Make NachOS-4.0
 cd ~/nachos-4.0/code
 make
 ```
+
 ---
+
 ## Test
 ```
 cd ./userprog
@@ -64,7 +71,9 @@ Print integer:7
 Print integer:6
 return value:0
 ```
+
 ---
+
 ## Reference
 
 * [General Nachos Documentation](https://homes.cs.washington.edu/~tom/nachos/)
