@@ -1,0 +1,2334 @@
+#!/bin/sh
+# This is a shell archive (produced by GNU sharutils 4.1).
+# To extract the files from this archive, save it to some FILE, remove
+# everything before the `!/bin/sh' line above, then type `sh FILE'.
+#
+# Made on 1996-06-18 13:23 PDT by <tea@speeding.CS.Berkeley.EDU>.
+# Source directory was `/home/barad-dur/now/prof/tea/nachos/new/lib'.
+#
+# Existing files will *not* be overwritten unless `-c' is specified.
+#
+# This shar contains:
+# length mode       name
+# ------ ---------- ------------------------------------------
+#   2053 -rw-r--r-- bitmap.h
+#   1229 -rw-r--r-- copyright.h
+#   3058 -rw-r--r-- debug.h
+#   4022 -rw-r--r-- hash.h
+#    385 -rw-r--r-- libtest.h
+#   4601 -rw-r--r-- list.h
+#   2555 -rw-r--r-- sysdep.h
+#   1116 -rw-r--r-- utility.h
+#   4759 -rw-r--r-- bitmap.cc
+#   1319 -rw-r--r-- debug.cc
+#  10395 -rw-r--r-- hash.cc
+#   2766 -rw-r--r-- libtest.cc
+#  10126 -rw-r--r-- list.cc
+#  13316 -rw-r--r-- sysdep.cc
+#
+touch -am 1231235999 $$.touch >/dev/null 2>&1
+if test ! -f 1231235999 && test -f $$.touch; then
+  shar_touch=touch
+else
+  shar_touch=:
+  echo
+  echo 'WARNING: not restoring timestamps.  Consider getting and'
+  echo "installing GNU \`touch', distributed in GNU File Utilities..."
+  echo
+fi
+rm -f 1231235999 $$.touch
+#
+# ============= bitmap.h ==============
+if test -f 'bitmap.h' && test X"$1" != X"-c"; then
+  echo 'x - skipping bitmap.h (file already exists)'
+else
+  echo 'x - extracting bitmap.h (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'bitmap.h' &&
+// bitmap.h 
+//	Data structures defining a bitmap -- an array of bits each of which
+//	can be either on or off.
+//
+//	Represented as an array of unsigned integers, on which we do
+//	modulo arithmetic to find the bit we are interested in.
+//
+//	The bitmap can be parameterized with with the number of bits being 
+//	managed.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#ifndef BITMAP_H
+#define BITMAP_H
+X
+#include "copyright.h"
+#include "utility.h"
+X
+// Definitions helpful for representing a bitmap as an array of integers
+const int BitsInByte =	8;
+const int BitsInWord = sizeof(unsigned int) * BitsInByte;
+X
+// The following class defines a "bitmap" -- an array of bits,
+// each of which can be independently set, cleared, and tested.
+//
+// Most useful for managing the allocation of the elements of an array --
+// for instance, disk sectors, or main memory pages.
+// Each bit represents whether the corresponding sector or page is
+// in use or free.
+X
+class Bitmap {
+X  public:
+X    Bitmap(int numItems);	// Initialize a bitmap, with "numItems" bits
+X				// initially, all bits are cleared.
+X    ~Bitmap();			// De-allocate bitmap
+X    
+X    void Mark(int which);   	// Set the "nth" bit
+X    void Clear(int which);  	// Clear the "nth" bit
+X    bool Test(int which) const;	// Is the "nth" bit set?
+X    int FindAndSet();         // Return the # of a clear bit, and as a side
+X				// effect, set the bit. 
+X				// If no bits are clear, return -1.
+X    int NumClear() const;	// Return the number of clear bits
+X
+X    void Print() const;		// Print contents of bitmap
+X    void SelfTest();		// Test whether bitmap is working
+X    
+X  protected:
+X    int numBits;		// number of bits in the bitmap
+X    int numWords;		// number of words of bitmap storage
+X				// (rounded up if numBits is not a
+X				//  multiple of the number of bits in
+X				//  a word)
+X    unsigned int *map;		// bit storage
+};
+X
+#endif // BITMAP_H
+SHAR_EOF
+  $shar_touch -am 0126174396 'bitmap.h' &&
+  chmod 0644 'bitmap.h' ||
+  echo 'restore of bitmap.h failed'
+  shar_count="`wc -c < 'bitmap.h'`"
+  test 2053 -eq "$shar_count" ||
+    echo "bitmap.h: original size 2053, current size $shar_count"
+fi
+# ============= copyright.h ==============
+if test -f 'copyright.h' && test X"$1" != X"-c"; then
+  echo 'x - skipping copyright.h (file already exists)'
+else
+  echo 'x - extracting copyright.h (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'copyright.h' &&
+/*
+Copyright (c) 1992-1996 The Regents of the University of California.
+All rights reserved.
+X
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose, without fee, and without written agreement is
+hereby granted, provided that the above copyright notice and the following
+two paragraphs appear in all copies of this software.
+X
+IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT
+OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF
+CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+X
+THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
+ON AN "AS IS" BASIS, AND THE UNIVERSITY OF CALIFORNIA HAS NO OBLIGATION TO
+PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+*/
+X
+#ifdef MAIN	/* include the copyright message in every executable */
+static char *copyright = "Copyright (c) 1992-1993 The Regents of the University of California.  All rights reserved.";
+#endif // MAIN
+SHAR_EOF
+  $shar_touch -am 0301110496 'copyright.h' &&
+  chmod 0644 'copyright.h' ||
+  echo 'restore of copyright.h failed'
+  shar_count="`wc -c < 'copyright.h'`"
+  test 1229 -eq "$shar_count" ||
+    echo "copyright.h: original size 1229, current size $shar_count"
+fi
+# ============= debug.h ==============
+if test -f 'debug.h' && test X"$1" != X"-c"; then
+  echo 'x - skipping debug.h (file already exists)'
+else
+  echo 'x - extracting debug.h (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'debug.h' &&
+// debug.h 
+//	Data structures for debugging routines.
+//
+//	The debugging routines allow the user to turn on selected
+//	debugging messages, controllable from the command line arguments
+//	passed to Nachos (-d).  You are encouraged to add your own
+//	debugging flags.  
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#ifndef DEBUG_H
+#define DEBUG_H
+X
+#include "copyright.h"		
+#include "utility.h"
+#include "sysdep.h"
+X
+// The pre-defined debugging flags are:
+X
+const char dbgAll = '+';		// turn on all debug messages
+const char dbgThread = 't';		// threads
+const char dbgSynch = 's';		// locks, semaphores, condition vars
+const char dbgInt = 'i'; 		// interrupt emulation
+const char dbgMach = 'm'; 		// machine emulation (USER_PROGRAM)
+const char dbgDisk = 'd'; 		// disk emulation (FILESYS)
+const char dbgFile = 'f'; 		// file system (FILESYS)
+const char dbgAddr = 'a'; 		// address spaces (USER_PROGRAM)
+const char dbgNet = 'n'; 		// network emulation (NETWORK)
+X
+class Debug {
+X  public:
+X    Debug(char *flagList);
+X
+X    bool IsEnabled(char flag);
+X
+X  private:
+X    char *enableFlags;		// controls which DEBUG messages are printed
+};
+X
+extern Debug *debug;
+X
+X
+//----------------------------------------------------------------------
+// DEBUG
+//      If flag is enabled, print a message.
+//----------------------------------------------------------------------
+#define DEBUG(flag,expr)                                                     \
+X    if (!debug->IsEnabled(flag)) {} else { 				\
+X        cerr << expr << "\n";   				        \
+X    }
+X
+X
+//----------------------------------------------------------------------
+// ASSERT
+//      If condition is false,  print a message and dump core.
+//	Useful for documenting assumptions in the code.
+//
+//	NOTE: needs to be a #define, to be able to print the location 
+//	where the error occurred.
+//----------------------------------------------------------------------
+#define ASSERT(condition)                                               \
+X    if (condition) {} else { 						\
+X	cerr << "Assertion failed: line " << __LINE__ << " file " << __FILE__ << "\n";      \
+X        Abort();                                                              \
+X    }
+X
+//----------------------------------------------------------------------
+// ASSERTNOTREACHED
+//      Print a message and dump core (equivalent to ASSERT(FALSE) without
+//	making the compiler whine).  Useful for documenting when
+//	code should not be reached.
+//
+//	NOTE: needs to be a #define, to be able to print the location 
+//	where the error occurred.
+//----------------------------------------------------------------------
+X
+#define ASSERTNOTREACHED()                                             \
+X    { 						\
+X	cerr << "Assertion failed: line " << __LINE__ << " file " << __FILE__ << "\n";      \
+X        Abort();                                                              \
+X    }
+X
+#endif DEBUG_H
+SHAR_EOF
+  $shar_touch -am 0218231996 'debug.h' &&
+  chmod 0644 'debug.h' ||
+  echo 'restore of debug.h failed'
+  shar_count="`wc -c < 'debug.h'`"
+  test 3058 -eq "$shar_count" ||
+    echo "debug.h: original size 3058, current size $shar_count"
+fi
+# ============= hash.h ==============
+if test -f 'hash.h' && test X"$1" != X"-c"; then
+  echo 'x - skipping hash.h (file already exists)'
+else
+  echo 'x - extracting hash.h (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'hash.h' &&
+// hash.h
+//      Data structures to manage a hash table to relate arbitrary
+//	keys to arbitrary values. A hash table allows efficient lookup
+//	for the value given the key.
+//
+//	I've only tested this implementation when both the key and the
+//	value are primitive types (ints or pointers).  There is no 
+//	guarantee that it will work in general.  In particular, it
+//	assumes that the "==" operator works for both keys and values.
+//
+//	In addition, the key must have Hash() defined:
+//		unsigned Hash(Key k);
+//			returns a randomized # based on value of key
+//
+//	The value must have a function defined to retrieve the key:
+//		Key GetKey(T x);
+//
+//	The hash table automatically resizes itself as items are
+//	put into the table.  The implementation uses chaining
+//	to resolve hash conflicts.
+//
+//	Allocation and deallocation of the items in the table are to 
+//	be done by the caller.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation
+// of liability and disclaimer of warranty provisions.
+X
+#ifndef HASH_H
+#define HASH_H
+X
+#include "copyright.h"
+#include "list.h"
+X
+// The following class defines a "hash table" -- allowing quick
+// lookup according to the hash function defined for the items
+// being put into the table.
+X
+template <class Key, class T> 
+class HashTable {
+X  public:
+X    HashTable(Key (*get)(T x), unsigned (*hFunc)(Key x));	
+X    				// initialize a hash table
+X    ~HashTable();		// deallocate a hash table
+X
+X    void Insert(T item);	// Put item into hash table
+X    T Remove(Key key);		// Remove item from hash table.
+X
+X    bool Find(Key key, T *itemPtr) const; 
+X    				// Find an item from its key
+X    bool IsInTable(Key key) { T dummy; return Find(key, &dummy); } 	
+X				// Is the item in the table?
+X
+X    bool IsEmpty() { return numItems == 0; }	
+X				// does the table have anything in it
+X
+X    void Apply(void (*f)(T)) const;
+X    				// apply function to all elements in table
+X
+X    void SanityCheck() const;// is this still a legal hash table?
+X    void SelfTest(T *p, int numItems);	
+X    				// is the module working?
+X
+X  private:
+typedef List<T> *Bucket;
+X
+X    Bucket *buckets;		// the array of hash buckets
+X    int numBuckets;		// the number of buckets
+X    int numItems;		// the number of items in the table
+X    
+X    Key (*getKey)(T x);		// get Key from value
+X    unsigned (*hash)(Key x);	// the hash function
+X
+X    void InitBuckets(int size);// initialize bucket array
+X    void DeleteBuckets(Bucket *table, int size);
+X    				// deallocate bucket array
+X				
+X    int HashValue(Key key) const;
+X    				// which bucket does the key hash to?
+X
+X    void ReHash();		// expand the hash table
+X    
+X    bool FindInBucket(int bucket, Key key, T *itemPtr) const; 
+X    				// find item in bucket
+X    int FindNextFullBucket(int start) const;
+X    				// find next full bucket starting from this one
+X
+friend HashIterator<Key,T>;
+};
+X
+// The following class can be used to step through a hash table --
+// same interface as ListIterator.  Example code:
+//	HashIterator<Key, T> iter(table); 
+//
+//	for (; !iter->IsDone(); iter->Next()) {
+//	    Operation on iter->Item()
+//      }
+X
+template <class Key,class T>
+class HashIterator {
+X  public:
+X    HashIterator(HashTable<Key,T> *table); // initialize an iterator
+X    ~HashIterator() { if (bucketIter != NULL) delete bucketIter;}; 
+X				// destruct an iterator
+X
+X    bool IsDone() { return (bucket == table->numBuckets); };
+X				// return TRUE if no more items in table 
+X    T Item() { ASSERT(!IsDone()); return bucketIter->Item(); }; 
+X				// return current item in table
+X    void Next(); 		// update iterator to point to next
+X
+X  private:   
+X    HashTable<Key,T> *table;	// the hash table we're stepping through
+X    int bucket;			// current bucket we are in
+X    ListIterator<T> *bucketIter; // where we are in the bucket
+};
+X
+#include "hash.cc"		// templates are really like macros
+X				// so needs to be included in every
+X				// file that uses the template
+#endif // HASH_H
+SHAR_EOF
+  $shar_touch -am 0127145596 'hash.h' &&
+  chmod 0644 'hash.h' ||
+  echo 'restore of hash.h failed'
+  shar_count="`wc -c < 'hash.h'`"
+  test 4022 -eq "$shar_count" ||
+    echo "hash.h: original size 4022, current size $shar_count"
+fi
+# ============= libtest.h ==============
+if test -f 'libtest.h' && test X"$1" != X"-c"; then
+  echo 'x - skipping libtest.h (file already exists)'
+else
+  echo 'x - extracting libtest.h (binary)'
+  sed 's/^X//' << 'SHAR_EOF' | uudecode &&
+begin 600 libtest.h
+M+R\@;&EB=&5S="YH(`HO+PD@1&5F:6YE<R!S96QF('1E<W0@;6]D=6QE(&9O
+M<B!S=&%N9&%R9"!L:6)R87)Y(')O=71I;F5S+@HO+PHO+R!#;W!Y<FEG:'0@
+M*&,I(#$Y.3(M,3DY-B!4:&4@4F5G96YT<R!O9B!T:&4@56YI=F5R<VET>2!O
+M9B!#86QI9F]R;FEA+@HO+R!!;&P@<FEG:'1S(')E<V5R=F5D+B`@4V5E(&-O
+M<'ER:6=H="YH(&9O<B!C;W!Y<FEG:'0@;F]T:6-E(&%N9"!L:6UI=&%T:6]N
+M(`HO+R!O9B!L:6%B:6QI='D@86YD(&1I<V-L86EM97(@;V8@=V%R<F%N='D@
+M<')O=FES:6]N<RX*"B-I9FYD968@3$E"5$535%]("B-D969I;F4@3$E"5$53
+M5%]("@HC:6YC;'5D92`B8V]P>7)I9VAT+F@B"@IE>'1E<FX@=F]I9"!,:6)3
+996QF5&5S="@I.PH*(V5N9&EF($U!24Y?2&@B
+`
+end
+SHAR_EOF
+  $shar_touch -am 0123155196 'libtest.h' &&
+  chmod 0644 'libtest.h' ||
+  echo 'restore of libtest.h failed'
+  shar_count="`wc -c < 'libtest.h'`"
+  test 385 -eq "$shar_count" ||
+    echo "libtest.h: original size 385, current size $shar_count"
+fi
+# ============= list.h ==============
+if test -f 'list.h' && test X"$1" != X"-c"; then
+  echo 'x - skipping list.h (file already exists)'
+else
+  echo 'x - extracting list.h (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'list.h' &&
+// list.h 
+//	Data structures to manage LISP-like lists.  
+//
+//      As in LISP, a list can contain any type of data structure
+//	as an item on the list: thread control blocks, 
+//	pending interrupts, etc.  Allocation and deallocation of the
+//	items on the list are to be done by the caller.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#ifndef LIST_H
+#define LIST_H
+X
+#include "copyright.h"
+#include "debug.h"
+X
+// The following class defines a "list element" -- which is
+// used to keep track of one item on a list.  It is equivalent to a
+// LISP cell, with a "car" ("next") pointing to the next element on the list,
+// and a "cdr" ("item") pointing to the item on the list.
+//
+// This class is private to this module (and classes that inherit
+// from this module). Made public for notational convenience.
+X
+template <class T>
+class ListElement {
+X  public:
+X    ListElement(T itm); 	// initialize a list element
+X    ListElement *next;	     	// next element on list, NULL if this is last
+X    T item; 	   	     	// item on the list
+};
+X
+// The following class defines a "list" -- a singly linked list of
+// list elements, each of which points to a single item on the list.
+// The class has been tested only for primitive types (ints, pointers);
+// no guarantees it will work in general.  For instance, all types
+// to be inserted into a list must have a "==" operator defined.
+X
+template <class T>
+class List {
+X  public:
+X    List();			// initialize the list
+X    virtual ~List();		// de-allocate the list
+X
+X    virtual void Prepend(T item);// Put item at the beginning of the list
+X    virtual void Append(T item); // Put item at the end of the list
+X
+X    T Front() { return first->item; }
+X    				// Return first item on list
+X				// without removing it
+X    T RemoveFront(); 		// Take item off the front of the list
+X    void Remove(T item); 	// Remove specific item from list
+X
+X    bool IsInList(T item) const;// is the item in the list?
+X
+X    unsigned int NumInList() { return numInList;};
+X    				// how many items in the list?
+X    bool IsEmpty() { return (numInList == 0); };
+X    				// is the list empty? 
+X
+X    void Apply(void (*f)(T)) const; 
+X    				// apply function to all elements in list
+X
+X    virtual void SanityCheck() const;	
+X				// has this list been corrupted?
+X    void SelfTest(T *p, int numEntries);
+X				// verify module is working
+X
+X  protected:
+X    ListElement<T> *first;  	// Head of the list, NULL if list is empty
+X    ListElement<T> *last;	// Last element of list
+X    int numInList;		// number of elements in list
+X
+friend ListIterator<T>;
+};
+X
+// The following class defines a "sorted list" -- a singly linked list of
+// list elements, arranged so that "Remove" always returns the smallest 
+// element. 
+// All types to be inserted onto a sorted list must have a "Compare"
+// function defined:
+//	   int Compare(T x, T y) 
+//		returns -1 if x < y
+//		returns 0 if x == y
+//		returns 1 if x > y
+X
+template <class T>
+class SortedList : public List<T> {
+X  public:
+X    SortedList(int (*comp)(T x, T y)) : List<T>() { compare = comp;};
+X    ~SortedList() {};		// base class destructor called automatically
+X
+X    void Insert(T item); 	// insert an item onto the list in sorted order
+X
+X    void SanityCheck() const;	// has this list been corrupted?
+X    void SelfTest(T *p, int numEntries);
+X				// verify module is working
+X
+X  private:
+X    int (*compare)(T x, T y);	// function for sorting list elements
+X
+X    void Prepend(T item) { Insert(item); }  // *pre*pending has no meaning 
+X				             //	in a sorted list
+X    void Append(T item) { Insert(item); }   // neither does *ap*pend 
+X
+};
+X
+// The following class can be used to step through a list. 
+// Example code:
+//	ListIterator<T> *iter(list); 
+//
+//	for (; !iter->IsDone(); iter->Next()) {
+//	    Operation on iter->Item()
+//      }
+X
+template <class T>
+class ListIterator {
+X  public:
+X    ListIterator(List<T> *list) { current = list->first; } 
+X				// initialize an iterator
+X
+X    bool IsDone() { return current == NULL; };
+X				// return TRUE if we are at the end of the list
+X
+X    T Item() { ASSERT(!IsDone()); return current->item; };
+X				// return current element on list
+X
+X    void Next() { current = current->next; };		
+X				// update iterator to point to next
+X
+X  private:
+X    ListElement<T> *current;	// where we are in the list
+};
+X
+#include "list.cc"		// templates are really like macros
+X				// so needs to be included in every
+X				// file that uses the template
+#endif // LIST_H
+SHAR_EOF
+  $shar_touch -am 0227011796 'list.h' &&
+  chmod 0644 'list.h' ||
+  echo 'restore of list.h failed'
+  shar_count="`wc -c < 'list.h'`"
+  test 4601 -eq "$shar_count" ||
+    echo "list.h: original size 4601, current size $shar_count"
+fi
+# ============= sysdep.h ==============
+if test -f 'sysdep.h' && test X"$1" != X"-c"; then
+  echo 'x - skipping sysdep.h (file already exists)'
+else
+  echo 'x - extracting sysdep.h (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'sysdep.h' &&
+// sysdep.h 
+//	System-dependent interface.  Nachos uses the routines defined
+//	here, rather than directly calling the UNIX library functions, to
+//	simplify porting between versions of UNIX, and even to
+//	other systems, such as MSDOS and the Macintosh.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#ifndef SYSDEP_H
+#define SYSDEP_H
+X
+#include "copyright.h"
+#include "iostream.h"
+#include "stdlib.h"
+#include "stdio.h"
+#include "string.h"
+X
+// Process control: abort, exit, and sleep
+extern void Abort();
+extern void Exit(int exitCode);
+extern void Delay(int seconds);
+X
+// Initialize system so that cleanUp routine is called when user hits ctl-C
+extern void CallOnUserAbort(void (*cleanup)(int));
+X
+// Initialize the pseudo random number generator
+extern void RandomInit(unsigned seed);
+extern unsigned int RandomNumber();
+X
+// Allocate, de-allocate an array, such that de-referencing
+// just beyond either end of the array will cause an error
+extern char *AllocBoundedArray(int size);
+extern void DeallocBoundedArray(char *p, int size);
+X
+// Check file to see if there are any characters to be read.
+// If no characters in the file, return without waiting.
+extern bool PollFile(int fd);
+X
+// File operations: open/read/write/lseek/close, and check for error
+// For simulating the disk and the console devices.
+extern int OpenForWrite(char *name);
+extern int OpenForReadWrite(char *name, bool crashOnError);
+extern void Read(int fd, char *buffer, int nBytes);
+extern int ReadPartial(int fd, char *buffer, int nBytes);
+extern void WriteFile(int fd, char *buffer, int nBytes);
+extern void Lseek(int fd, int offset, int whence);
+extern int Tell(int fd);
+extern void Close(int fd);
+extern bool Unlink(char *name);
+X
+// Other C library routines that are used by Nachos.
+// These are assumed to be portable, so we don't include a wrapper.
+extern "C" {
+int atoi(const char *str);
+double atof(const char *str);
+int abs(int i);
+}
+X
+#ifdef NETWORK
+// Interprocess communication operations, for simulating the network
+extern int OpenSocket();
+extern void CloseSocket(int sockID);
+extern void AssignNameToSocket(char *socketName, int sockID);
+extern void DeAssignNameToSocket(char *socketName);
+extern bool PollSocket(int sockID);
+extern void ReadFromSocket(int sockID, char *buffer, int packetSize);
+extern void SendToSocket(int sockID, char *buffer, int packetSize,char *toName);
+#endif
+X
+#endif // SYSDEP_H
+SHAR_EOF
+  $shar_touch -am 0418030196 'sysdep.h' &&
+  chmod 0644 'sysdep.h' ||
+  echo 'restore of sysdep.h failed'
+  shar_count="`wc -c < 'sysdep.h'`"
+  test 2555 -eq "$shar_count" ||
+    echo "sysdep.h: original size 2555, current size $shar_count"
+fi
+# ============= utility.h ==============
+if test -f 'utility.h' && test X"$1" != X"-c"; then
+  echo 'x - skipping utility.h (file already exists)'
+else
+  echo 'x - extracting utility.h (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'utility.h' &&
+// utility.h 
+//	Miscellaneous useful definitions.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#ifndef UTILITY_H
+#define UTILITY_H
+X
+#include "copyright.h"
+X
+// Miscellaneous useful routines
+X
+#define NULL 0
+#define TRUE  true
+#define FALSE  false
+// #define bool int		// necessary on the Mac?
+X
+#define min(a,b)  (((a) < (b)) ? (a) : (b))
+#define max(a,b)  (((a) > (b)) ? (a) : (b))
+X
+// Divide and either round up or down 
+#define divRoundDown(n,s)  ((n) / (s))
+#define divRoundUp(n,s)    (((n) / (s)) + ((((n) % (s)) > 0) ? 1 : 0))
+X
+// This declares the type "VoidFunctionPtr" to be a "pointer to a
+// function taking an arbitrary pointer argument and returning nothing".  With
+// such a function pointer (say it is "func"), we can call it like this:
+//
+//	(*func) ("help!");
+//
+// This is used by Thread::Fork as well as a couple of other places.
+X
+typedef void (*VoidFunctionPtr)(void *arg); 
+typedef void (*VoidNoArgFunctionPtr)(); 
+X
+#endif UTILITY_H
+SHAR_EOF
+  $shar_touch -am 0126174296 'utility.h' &&
+  chmod 0644 'utility.h' ||
+  echo 'restore of utility.h failed'
+  shar_count="`wc -c < 'utility.h'`"
+  test 1116 -eq "$shar_count" ||
+    echo "utility.h: original size 1116, current size $shar_count"
+fi
+# ============= bitmap.cc ==============
+if test -f 'bitmap.cc' && test X"$1" != X"-c"; then
+  echo 'x - skipping bitmap.cc (file already exists)'
+else
+  echo 'x - extracting bitmap.cc (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'bitmap.cc' &&
+// bitmap.cc
+//	Routines to manage a bitmap -- an array of bits each of which
+//	can be either on or off.  Represented as an array of integers.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#include "copyright.h"
+#include "debug.h"
+#include "bitmap.h"
+X
+//----------------------------------------------------------------------
+// BitMap::BitMap
+// 	Initialize a bitmap with "numItems" bits, so that every bit is clear.
+//	it can be added somewhere on a list.
+//
+//	"numItems" is the number of bits in the bitmap.
+//----------------------------------------------------------------------
+X
+Bitmap::Bitmap(int numItems) 
+{ 
+X    int i;
+X
+X    ASSERT(numItems > 0);
+X
+X    numBits = numItems;
+X    numWords = divRoundUp(numBits, BitsInWord);
+X    map = new unsigned int[numWords];
+X    for (i = 0; i < numWords; i++) {
+X	map[i] = 0;		// initialize map to keep Purify happy
+X    }
+X    for (i = 0; i < numBits; i++) {
+X        Clear(i);
+X    }
+}
+X
+//----------------------------------------------------------------------
+// Bitmap::~Bitmap
+// 	De-allocate a bitmap.
+//----------------------------------------------------------------------
+X
+Bitmap::~Bitmap()
+{ 
+X    delete map;
+}
+X
+//----------------------------------------------------------------------
+// Bitmap::Set
+// 	Set the "nth" bit in a bitmap.
+//
+//	"which" is the number of the bit to be set.
+//----------------------------------------------------------------------
+X
+void
+Bitmap::Mark(int which) 
+{ 
+X    ASSERT(which >= 0 && which < numBits);
+X
+X    map[which / BitsInWord] |= 1 << (which % BitsInWord);
+X
+X    ASSERT(Test(which));
+}
+X    
+//----------------------------------------------------------------------
+// Bitmap::Clear
+// 	Clear the "nth" bit in a bitmap.
+//
+//	"which" is the number of the bit to be cleared.
+//----------------------------------------------------------------------
+X
+void 
+Bitmap::Clear(int which) 
+{
+X    ASSERT(which >= 0 && which < numBits);
+X
+X    map[which / BitsInWord] &= ~(1 << (which % BitsInWord));
+X
+X    ASSERT(!Test(which));
+}
+X
+//----------------------------------------------------------------------
+// Bitmap::Test
+// 	Return TRUE if the "nth" bit is set.
+//
+//	"which" is the number of the bit to be tested.
+//----------------------------------------------------------------------
+X
+bool 
+Bitmap::Test(int which) const
+{
+X    ASSERT(which >= 0 && which < numBits);
+X    
+X    if (map[which / BitsInWord] & (1 << (which % BitsInWord))) {
+X	return TRUE;
+X    } else {
+X	return FALSE;
+X    }
+}
+X
+//----------------------------------------------------------------------
+// Bitmap::FindAndSet
+// 	Return the number of the first bit which is clear.
+//	As a side effect, set the bit (mark it as in use).
+//	(In other words, find and allocate a bit.)
+//
+//	If no bits are clear, return -1.
+//----------------------------------------------------------------------
+X
+int 
+Bitmap::FindAndSet() 
+{
+X    for (int i = 0; i < numBits; i++) {
+X	if (!Test(i)) {
+X	    Mark(i);
+X	    return i;
+X	}
+X    }
+X    return -1;
+}
+X
+//----------------------------------------------------------------------
+// Bitmap::NumClear
+// 	Return the number of clear bits in the bitmap.
+//	(In other words, how many bits are unallocated?)
+//----------------------------------------------------------------------
+X
+int 
+Bitmap::NumClear() const
+{
+X    int count = 0;
+X
+X    for (int i = 0; i < numBits; i++) {
+X	if (!Test(i)) {
+X	    count++;
+X	}
+X    }
+X    return count;
+}
+X
+//----------------------------------------------------------------------
+// Bitmap::Print
+// 	Print the contents of the bitmap, for debugging.
+//
+//	Could be done in a number of ways, but we just print the #'s of
+//	all the bits that are set in the bitmap.
+//----------------------------------------------------------------------
+X
+void
+Bitmap::Print() const
+{
+X    cout << "Bitmap set:\n"; 
+X    for (int i = 0; i < numBits; i++) {
+X	if (Test(i)) {
+X	    cout << i << ", ";
+X	}
+X    }
+X    cout << "\n"; 
+}
+X
+X
+//----------------------------------------------------------------------
+// Bitmap::SelfTest
+// 	Test whether this module is working.
+//----------------------------------------------------------------------
+X
+void
+Bitmap::SelfTest() 
+{
+X    int i;
+X    
+X    ASSERT(numBits >= BitsInWord);	// bitmap must be big enough
+X
+X    ASSERT(NumClear() == numBits);	// bitmap must be empty
+X    ASSERT(FindAndSet() == 0);
+X    Mark(31);
+X    ASSERT(Test(0) && Test(31));
+X
+X    ASSERT(FindAndSet() == 1);
+X    Clear(0);
+X    Clear(1);
+X    Clear(31);
+X
+X    for (i = 0; i < numBits; i++) {
+X        Mark(i);
+X    }
+X    ASSERT(FindAndSet() == -1);		// bitmap should be full!
+X    for (i = 0; i < numBits; i++) {
+X        Clear(i);
+X    }
+}
+SHAR_EOF
+  $shar_touch -am 0218230796 'bitmap.cc' &&
+  chmod 0644 'bitmap.cc' ||
+  echo 'restore of bitmap.cc failed'
+  shar_count="`wc -c < 'bitmap.cc'`"
+  test 4759 -eq "$shar_count" ||
+    echo "bitmap.cc: original size 4759, current size $shar_count"
+fi
+# ============= debug.cc ==============
+if test -f 'debug.cc' && test X"$1" != X"-c"; then
+  echo 'x - skipping debug.cc (file already exists)'
+else
+  echo 'x - extracting debug.cc (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'debug.cc' &&
+// debug.cc 
+//	Debugging routines.  Allows users to control whether to 
+//	print DEBUG statements, based on a command line argument.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#include "copyright.h"
+#include "utility.h"
+#include "debug.h" 
+#include "string.h"
+X
+//----------------------------------------------------------------------
+// Debug::Debug
+//      Initialize so that only DEBUG messages with a flag in flagList 
+//	will be printed.
+//
+//	If the flag is "+", we enable all DEBUG messages.
+//
+// 	"flagList" is a string of characters for whose DEBUG messages are 
+//		to be enabled.
+//----------------------------------------------------------------------
+X
+Debug::Debug(char *flagList)
+{
+X    enableFlags = flagList;
+}
+X
+X
+//----------------------------------------------------------------------
+// Debug::IsEnabled
+//      Return TRUE if DEBUG messages with "flag" are to be printed.
+//----------------------------------------------------------------------
+X
+bool
+Debug::IsEnabled(char flag)
+{
+X    if (enableFlags != NULL) {
+X	return ((strchr(enableFlags, flag) != 0) 
+X		|| (strchr(enableFlags, '+') != 0));
+X    } else {
+X    	return FALSE;
+X    }
+}
+SHAR_EOF
+  $shar_touch -am 0119150796 'debug.cc' &&
+  chmod 0644 'debug.cc' ||
+  echo 'restore of debug.cc failed'
+  shar_count="`wc -c < 'debug.cc'`"
+  test 1319 -eq "$shar_count" ||
+    echo "debug.cc: original size 1319, current size $shar_count"
+fi
+# ============= hash.cc ==============
+if test -f 'hash.cc' && test X"$1" != X"-c"; then
+  echo 'x - skipping hash.cc (file already exists)'
+else
+  echo 'x - extracting hash.cc (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'hash.cc' &&
+// hash.cc 
+//     	Routines to manage a self-expanding hash table of arbitrary things.
+//	The hashing function is supplied by the objects being put into
+//	the table; we use chaining to resolve hash conflicts.
+//
+//	The hash table is implemented as an array of sorted lists,
+//	and we expand the hash table if the number of elements in the table
+//	gets too big.
+// 
+//     	NOTE: Mutual exclusion must be provided by the caller.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+const int InitialBuckets = 4;	// how big a hash table do we start with
+const int ResizeRatio = 3;	// when do we grow the hash table?
+const int IncreaseSizeBy = 4;	// how much do we grow table when needed?
+X
+#include "copyright.h"
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::HashTable
+//	Initialize a hash table, empty to start with.
+//	Elements can now be added to the table.
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+HashTable<Key,T>::HashTable(Key (*get)(T x), unsigned (*hFunc)(Key x))
+{ 
+X    numItems = 0;
+X    InitBuckets(InitialBuckets);
+X    getKey = get;
+X    hash = hFunc;
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::InitBuckets
+//	Initialize the bucket array for a hash table.
+//	Called by the constructor and by ReHash().
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+void
+HashTable<Key,T>::InitBuckets(int sz)
+{ 
+X    numBuckets = sz;
+X    buckets = new Bucket[numBuckets];
+X    for (int i = 0; i < sz; i++) {
+X    	buckets[i] = new List<T>;
+X    }
+}
+X
+//----------------------------------------------------------------------
+// HashTable<T>::~HashTable
+//	Prepare a hash table for deallocation.  
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+HashTable<Key,T>::~HashTable()
+{ 
+X    ASSERT(IsEmpty());		// make sure table is empty
+X    DeleteBuckets(buckets, numBuckets);
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::DeleteBuckets
+//	De-Initialize the bucket array for a hash table.
+//	Called by the destructor and by ReHash().
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+void
+HashTable<Key,T>::DeleteBuckets(List<T> **table, int sz)
+{ 
+X    for (int i = 0; i < sz; i++) {
+X    	delete table[i];
+X    }
+X    delete [] table;
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::HashValue
+//      Return hash table bucket that would contain key.
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+int
+HashTable<Key, T>::HashValue(Key key) const 
+{
+X    int result = (*hash)(key) % numBuckets;
+X    ASSERT(result >= 0 && result < numBuckets);
+X    return result;
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::Insert
+//      Put an item into the hashtable.
+//      
+//	Resize the table if the # of elements / # of buckets is too big.
+//	Then allocate a HashElement to keep track of the key, item pair,
+//	and add it to the right bucket.
+//
+//	"key" is the key we'll use to find this item.
+//	"item" is the thing to put in the table.
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+void
+HashTable<Key,T>::Insert(T item)
+{
+X    Key key = getKey(item);
+X
+X    ASSERT(!IsInTable(key));
+X
+X    if ((numItems / numBuckets) >= ResizeRatio) {
+X	ReHash();
+X    }
+X
+X    buckets[HashValue(key)]->Append(item);
+X    numItems++;
+X
+X    ASSERT(IsInTable(key));
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::ReHash
+//      Increase the size of the hashtable, by 
+//	  (i) making a new table
+//	  (ii) moving all the elements into the new table
+//	  (iii) deleting the old table
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+void
+HashTable<Key,T>::ReHash()
+{
+X    Bucket *oldTable = buckets;
+X    int oldSize = numBuckets;
+X    T item;
+X
+X    SanityCheck();
+X    InitBuckets(numBuckets * IncreaseSizeBy);
+X
+X    for (int i = 0; i < oldSize; i++) {
+X	while (!oldTable[i]->IsEmpty()) {
+X	    item = oldTable[i]->RemoveFront();
+X	    buckets[HashValue(getKey(item))]->Append(item);
+X        }
+X    }
+X    DeleteBuckets(oldTable, oldSize);
+X    SanityCheck();
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::FindInBucket
+//      Find an item in a hash table bucket, from it's key
+//
+//	"bucket" -- the list storing the item, if it's in the table 
+//	"key" -- the key uniquely identifying the item
+// 
+// Returns:
+//	Whether item is found, and if found, the item.
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+bool
+HashTable<Key,T>::FindInBucket(int bucket, 
+X				Key key, T *itemPtr) const
+{
+X    ListIterator<T> iterator(buckets[bucket]);
+X
+X    for (; !iterator.IsDone(); iterator.Next()) {
+X	if (key == getKey(iterator.Item())) { // found!
+X	    *itemPtr = iterator.Item();
+X	    return TRUE;
+X        }
+X    }
+X    *itemPtr = NULL;
+X    return FALSE;
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::Find
+//      Find an item from the hash table.
+// 
+// Returns:
+//	The item or NULL if not found. 
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+bool
+HashTable<Key,T>::Find(Key key, T *itemPtr) const
+{
+X    int bucket = HashValue(key);
+X    
+X    return FindInBucket(bucket, key, itemPtr); 
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::Remove
+//      Remove an item from the hash table. The item must be in the table.
+// 
+// Returns:
+//	The removed item.
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+T
+HashTable<Key,T>::Remove(Key key)
+{
+X    int bucket = HashValue(key);
+X    T item;
+X    bool found = FindInBucket(bucket, key, &item); 
+X
+X    ASSERT(found);	// item must be in table
+X
+X    buckets[bucket]->Remove(item);
+X    numItems--;
+X
+X    ASSERT(!IsInTable(key));
+X    return item;
+}
+X
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::Apply
+//      Apply function to every item in the hash table.
+//
+//	"func" -- the function to apply
+//----------------------------------------------------------------------
+X
+template <class Key,class T>
+void
+HashTable<Key,T>::Apply(void (*func)(T)) const
+{
+X    for (int bucket = 0; bucket < numBuckets; bucket++) {
+X        buckets[bucket]->Apply(func);
+X    }
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::FindNextFullBucket
+//      Find the next bucket in the hash table that has any items in it.
+//
+//	"bucket" -- where to start looking for full buckets
+//----------------------------------------------------------------------
+X
+template <class Key,class T>
+int
+HashTable<Key,T>::FindNextFullBucket(int bucket) const
+{ 
+X    for (; bucket < numBuckets; bucket++) {
+X	if (!buckets[bucket]->IsEmpty()) {
+X	     break;
+X	}
+X    }
+X    return bucket;
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::SanityCheck
+//      Test whether this is still a legal hash table.
+//
+//	Tests: are all the buckets legal?
+//	       does the table have the right # of elements?
+//	       do all the elements hash to where they are stored?
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+void 
+HashTable<Key,T>::SanityCheck() const
+{
+X    int numFound = 0;
+X    ListIterator<T> *iterator;
+X
+X    for (int i = 0; i < numBuckets; i++) {
+X	buckets[i]->SanityCheck();
+X	numFound += buckets[i]->NumInList();
+X	iterator = new ListIterator<T>(buckets[i]);
+X        for (; !iterator->IsDone(); iterator->Next()) {
+X	    ASSERT(i == HashValue(getKey(iterator->Item())));
+X        }
+X        delete iterator;
+X    }
+X    ASSERT(numItems == numFound);
+X
+}
+X
+//----------------------------------------------------------------------
+// HashTable<Key,T>::SelfTest
+//      Test whether this module is working.
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+void 
+HashTable<Key,T>::SelfTest(T *p, int numEntries)
+{
+X    int i;
+X    HashIterator<Key, T> *iterator = new HashIterator<Key,T>(this);
+X    
+X    SanityCheck();
+X    ASSERT(IsEmpty());	// check that table is empty in various ways
+X    for (; !iterator->IsDone(); iterator->Next()) {
+X	ASSERTNOTREACHED();
+X    }
+X    delete iterator;
+X
+X    for (i = 0; i < numEntries; i++) {
+X        Insert(p[i]);
+X        ASSERT(IsInTable(getKey(p[i])));
+X        ASSERT(!IsEmpty());
+X    }
+X    
+X    // should be able to get out everything we put in
+X    for (i = 0; i < numEntries; i++) {  
+X        ASSERT(Remove(getKey(p[i])) == p[i]);
+X    }
+X
+X    ASSERT(IsEmpty());
+X    SanityCheck();
+}
+X
+X
+//----------------------------------------------------------------------
+// HashIterator<Key,T>::HashIterator
+//      Initialize a data structure to allow us to step through
+//	every entry in a has table.
+//----------------------------------------------------------------------
+X
+template <class Key, class T>
+HashIterator<Key,T>::HashIterator(HashTable<Key,T> *tbl) 
+{ 
+X    table = tbl;
+X    bucket = table->FindNextFullBucket(0);
+X    bucketIter = NULL;
+X    if (bucket < table->numBuckets) {
+X	bucketIter = new ListIterator<T>(table->buckets[bucket]);
+X    }
+}
+X
+//----------------------------------------------------------------------
+// HashIterator<Key,T>::Next
+//      Update iterator to point to the next item in the table.
+//----------------------------------------------------------------------
+X
+template <class Key,class T>
+void
+HashIterator<Key,T>::Next() 
+{ 
+X    bucketIter->Next();
+X    if (bucketIter->IsDone()) {
+X	delete bucketIter;
+X	bucketIter = NULL;
+X        bucket = table->FindNextFullBucket(++bucket);
+X        if (bucket < table->numBuckets) {
+X	    bucketIter = new ListIterator<T>(table->buckets[bucket]);
+X        }
+X    }
+}
+SHAR_EOF
+  $shar_touch -am 0218231896 'hash.cc' &&
+  chmod 0644 'hash.cc' ||
+  echo 'restore of hash.cc failed'
+  shar_count="`wc -c < 'hash.cc'`"
+  test 10395 -eq "$shar_count" ||
+    echo "hash.cc: original size 10395, current size $shar_count"
+fi
+# ============= libtest.cc ==============
+if test -f 'libtest.cc' && test X"$1" != X"-c"; then
+  echo 'x - skipping libtest.cc (file already exists)'
+else
+  echo 'x - extracting libtest.cc (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'libtest.cc' &&
+// libtest.cc 
+//	Driver code to call self-test routines for standard library
+//	classes -- bitmaps, lists, sorted lists, and hash tables.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#include "copyright.h"
+#include "libtest.h"
+#include "bitmap.h"
+#include "list.h"
+#include "hash.h"
+#include "sysdep.h"
+X
+//----------------------------------------------------------------------
+// IntCompare
+//	Compare two integers together.  Serves as the comparison
+//	function for testing SortedLists
+//----------------------------------------------------------------------
+X
+static int 
+IntCompare(int x, int y) {
+X    if (x < y) return -1;
+X    else if (x == y) return 0;
+X    else return 1;
+}
+X
+//----------------------------------------------------------------------
+// HashInt, HashKey
+//	Compute a hash function on an integer.  Serves as the
+//	hashing function for testing HashTables.
+//----------------------------------------------------------------------
+X
+static unsigned int 
+HashInt(int key) {
+X    return (unsigned int) key;
+}
+X
+//----------------------------------------------------------------------
+// HashKey
+//	Convert a string into an integer.  Serves as the function
+//	to retrieve the key from the item in the hash table, for
+//	testing HashTables.  Should be able to use "atoi" directly,
+//	but some compilers complain about that.
+//----------------------------------------------------------------------
+X
+static int 
+HashKey(char *str) {
+X    return atoi(str);
+}
+X
+// Array of values to be inserted into a List or SortedList. 
+static int listTestVector[] = { 9, 5, 7 };
+X
+// Array of values to be inserted into the HashTable
+// There are enough here to force a ReHash().
+static char *hashTestVector[] = { "0", "1", "2", "3", "4", "5", "6",
+X	 "7", "8", "9", "10", "11", "12", "13", "14"};
+X
+//----------------------------------------------------------------------
+// LibSelfTest
+//	Run self tests on bitmaps, lists, sorted lists, and 
+//	hash tables.
+//----------------------------------------------------------------------
+X
+void
+LibSelfTest () {
+X    Bitmap *map = new Bitmap(200);
+X    List<int> *list = new List<int>;
+X    SortedList<int> *sortList = new SortedList<int>(IntCompare);
+X    HashTable<int, char *> *hashTable = 
+X	new HashTable<int, char *>(HashKey, HashInt);
+X	
+X		
+X    map->SelfTest();
+X    list->SelfTest(listTestVector, sizeof(listTestVector)/sizeof(int));
+X    sortList->SelfTest(listTestVector, sizeof(listTestVector)/sizeof(int));
+X    hashTable->SelfTest(hashTestVector, sizeof(hashTestVector)/sizeof(char *));
+X
+X    delete map;
+X    delete list;
+X    delete sortList;
+X    delete hashTable;
+}
+SHAR_EOF
+  $shar_touch -am 0204143296 'libtest.cc' &&
+  chmod 0644 'libtest.cc' ||
+  echo 'restore of libtest.cc failed'
+  shar_count="`wc -c < 'libtest.cc'`"
+  test 2766 -eq "$shar_count" ||
+    echo "libtest.cc: original size 2766, current size $shar_count"
+fi
+# ============= list.cc ==============
+if test -f 'list.cc' && test X"$1" != X"-c"; then
+  echo 'x - skipping list.cc (file already exists)'
+else
+  echo 'x - extracting list.cc (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'list.cc' &&
+// list.cc 
+//     	Routines to manage a singly linked list of "things".
+//	Lists are implemented as templates so that we can store
+//	anything on the list in a type-safe manner.
+//
+// 	A "ListElement" is allocated for each item to be put on the
+//	list; it is de-allocated when the item is removed. This means
+//      we don't need to keep a "next" pointer in every object we
+//      want to put on a list.
+// 
+//     	NOTE: Mutual exclusion must be provided by the caller.
+//  	If you want a synchronized list, you must use the routines 
+//	in synchlist.cc.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#include "copyright.h"
+X
+//----------------------------------------------------------------------
+// ListElement<T>::ListElement
+// 	Initialize a list element, so it can be added somewhere on a list.
+//
+//	"itm" is the thing to be put on the list.
+//----------------------------------------------------------------------
+X
+template <class T>
+ListElement<T>::ListElement(T itm)
+{
+X     item = itm;
+X     next = NULL;	// always initialize to something!
+}
+X
+X
+//----------------------------------------------------------------------
+// List<T>::List
+//	Initialize a list, empty to start with.
+//	Elements can now be added to the list.
+//----------------------------------------------------------------------
+X
+template <class T>
+List<T>::List()
+{ 
+X    first = last = NULL; 
+X    numInList = 0;
+}
+X
+//----------------------------------------------------------------------
+// List<T>::~List
+//	Prepare a list for deallocation.  
+//----------------------------------------------------------------------
+X
+template <class T>
+List<T>::~List()
+{ 
+X    ASSERT(IsEmpty());		// make sure list is empty
+}
+X
+//----------------------------------------------------------------------
+// List<T>::Append
+//      Append an "item" to the end of the list.
+//      
+//	Allocate a ListElement to keep track of the item.
+//      If the list is empty, then this will be the only element.
+//	Otherwise, put it at the end.
+//
+//	"item" is the thing to put on the list.
+//----------------------------------------------------------------------
+X
+template <class T>
+void
+List<T>::Append(T item)
+{
+X    ListElement<T> *element = new ListElement<T>(item);
+X
+X    ASSERT(!IsInList(item));
+X    if (IsEmpty()) {		// list is empty
+X	first = element;
+X	last = element;
+X    } else {			// else put it after last
+X	last->next = element;
+X	last = element;
+X    }
+X    numInList++;
+X    ASSERT(IsInList(item));
+}
+X
+//----------------------------------------------------------------------
+// List<T>::Prepend
+//	Same as Append, only put "item" on the front.
+//----------------------------------------------------------------------
+X
+template <class T>
+void
+List<T>::Prepend(T item)
+{
+X    ListElement<T> *element = new ListElement<T>(item);
+X
+X    ASSERT(!IsInList(item));
+X    if (IsEmpty()) {		// list is empty
+X	first = element;
+X	last = element;
+X    } else {			// else put it before first
+X	element->next = first;
+X	first = element;
+X    }
+X    numInList++;
+X    ASSERT(IsInList(item));
+}
+X
+//----------------------------------------------------------------------
+// List<T>::RemoveFront
+//      Remove the first "item" from the front of the list.
+//	List must not be empty.
+// 
+// Returns:
+//	The removed item.
+//----------------------------------------------------------------------
+X
+template <class T>
+T
+List<T>::RemoveFront()
+{
+X    ListElement<T> *element = first;
+X    T thing;
+X
+X    ASSERT(!IsEmpty());
+X
+X    thing = first->item;
+X    if (first == last) {	// list had one item, now has none 
+X        first = NULL;
+X	last = NULL;
+X    } else {
+X        first = element->next;
+X    }
+X    numInList--;
+X    delete element;
+X    return thing;
+}
+X
+//----------------------------------------------------------------------
+// List<T>::Remove
+//      Remove a specific item from the list.  Must be in the list!
+//----------------------------------------------------------------------
+X
+template <class T>
+void
+List<T>::Remove(T item)
+{
+X    ListElement<T> *prev, *ptr;
+X    T removed;
+X
+X    ASSERT(IsInList(item));
+X
+X    // if first item on list is match, then remove from front
+X    if (item == first->item) {	
+X        removed = RemoveFront();
+X        ASSERT(item == removed);
+X    } else {
+X	prev = first;
+X        for (ptr = first->next; ptr != NULL; prev = ptr, ptr = ptr->next) {
+X            if (item == ptr->item) {
+X		prev->next = ptr->next;
+X		if (prev->next == NULL) {
+X		    last = prev;
+X		}
+X		delete ptr;
+X		numInList--;
+X		break;
+X	    }
+X        }
+X	ASSERT(ptr != NULL);	// should always find item!
+X    }
+X   ASSERT(!IsInList(item));
+}
+X
+//----------------------------------------------------------------------
+// List<T>::IsInList
+//      Return TRUE if the item is in the list.
+//----------------------------------------------------------------------
+X
+template <class T>
+bool
+List<T>::IsInList(T item) const
+{ 
+X    ListElement<T> *ptr;
+X
+X    for (ptr = first; ptr != NULL; ptr = ptr->next) {
+X        if (item == ptr->item) {
+X            return TRUE;
+X        }
+X    }
+X    return FALSE;
+}
+X
+X
+//----------------------------------------------------------------------
+// List<T>::Apply
+//      Apply function to every item on a list.
+//
+//	"func" -- the function to apply
+//----------------------------------------------------------------------
+X
+template <class T>
+void
+List<T>::Apply(void (*func)(T)) const
+{ 
+X    ListElement<T> *ptr;
+X
+X    for (ptr = first; ptr != NULL; ptr = ptr->next) {
+X        (*func)(ptr->item);
+X    }
+}
+X
+X
+//----------------------------------------------------------------------
+// SortedList::Insert
+//      Insert an "item" into a list, so that the list elements are
+//	sorted in increasing order.
+//      
+//	Allocate a ListElement to keep track of the item.
+//      If the list is empty, then this will be the only element.
+//	Otherwise, walk through the list, one element at a time,
+//	to find where the new item should be placed.
+//
+//	"item" is the thing to put on the list. 
+//----------------------------------------------------------------------
+X
+template <class T>
+void
+SortedList<T>::Insert(T item)
+{
+X    ListElement<T> *element = new ListElement<T>(item);
+X    ListElement<T> *ptr;		// keep track
+X
+X    ASSERT(!IsInList(item));
+X    if (IsEmpty()) {			// if list is empty, put at front
+X        first = element;
+X        last = element;
+X    } else if (compare(item, first->item) < 0) {  // item goes at front 
+X	element->next = first;
+X	first = element;
+X    } else {		// look for first elt in list bigger than item
+X        for (ptr = first; ptr->next != NULL; ptr = ptr->next) {
+X            if (compare(item, ptr->next->item) < 0) {
+X		element->next = ptr->next;
+X	        ptr->next = element;
+X		numInList++;
+X		return;
+X	    }
+X	}
+X	last->next = element;		// item goes at end of list
+X	last = element;
+X    }
+X    numInList++;
+X    ASSERT(IsInList(item));
+}
+X
+//----------------------------------------------------------------------
+// List::SanityCheck
+//      Test whether this is still a legal list.
+//
+//	Tests: do I get to last starting from first?
+//	       does the list have the right # of elements?
+//----------------------------------------------------------------------
+X
+template <class T>
+void 
+List<T>::SanityCheck() const
+{
+X    ListElement<T> *ptr;
+X    int numFound;
+X
+X    if (first == NULL) {
+X	ASSERT((numInList == 0) && (last == NULL));
+X    } else if (first == last) {
+X	ASSERT((numInList == 1) && (last->next == NULL));
+X    } else {
+X        for (numFound = 1, ptr = first; ptr != last; ptr = ptr->next) {
+X	    numFound++;
+X            ASSERT(numFound <= numInList);	// prevent infinite loop
+X        }
+X        ASSERT(numFound == numInList);
+X        ASSERT(last->next == NULL);
+X    }
+}
+X
+//----------------------------------------------------------------------
+// List::SelfTest
+//      Test whether this module is working.
+//----------------------------------------------------------------------
+X
+template <class T>
+void 
+List<T>::SelfTest(T *p, int numEntries)
+{
+X    int i;
+X    ListIterator<T> *iterator = new ListIterator<T>(this);
+X
+X    SanityCheck();
+X    // check various ways that list is empty
+X    ASSERT(IsEmpty() && (first == NULL));
+X    for (; !iterator->IsDone(); iterator->Next()) {
+X	ASSERTNOTREACHED();	// nothing on list
+X    }
+X
+X    for (i = 0; i < numEntries; i++) {
+X	 Append(p[i]);
+X	 ASSERT(IsInList(p[i]));
+X	 ASSERT(!IsEmpty());
+X     }
+X     SanityCheck();
+X
+X     // should be able to get out everything we put in
+X     for (i = 0; i < numEntries; i++) {
+X	 Remove(p[i]);
+X         ASSERT(!IsInList(p[i]));
+X     }
+X     ASSERT(IsEmpty());
+X     SanityCheck();
+X     delete iterator;
+}
+X
+//----------------------------------------------------------------------
+// SortedList::SanityCheck
+//      Test whether this is still a legal sorted list.
+//
+//	Test: is the list sorted?
+//----------------------------------------------------------------------
+X
+template <class T>
+void 
+SortedList<T>::SanityCheck() const
+{
+X    ListElement<T> *prev, *ptr;
+X
+X    List<T>::SanityCheck();
+X    if (first != last) {
+X        for (prev = first, ptr = first->next; ptr != NULL; 
+X						prev = ptr, ptr = ptr->next) {
+X            ASSERT(compare(prev->item, ptr->item) <= 0);
+X        }
+X    }
+}
+X
+//----------------------------------------------------------------------
+// SortedList::SelfTest
+//      Test whether this module is working.
+//----------------------------------------------------------------------
+X
+template <class T>
+void 
+SortedList<T>::SelfTest(T *p, int numEntries)
+{
+X    int i;
+X    T *q = new T[numEntries];
+X
+X    List<T>::SelfTest(p, numEntries);
+X
+X    for (i = 0; i < numEntries; i++) {
+X	 Insert(p[i]);
+X	 ASSERT(IsInList(p[i]));
+X     }
+X     SanityCheck();
+X
+X     // should be able to get out everything we put in
+X     for (i = 0; i < numEntries; i++) {
+X	 q[i] = RemoveFront();
+X         ASSERT(!IsInList(q[i]));
+X     }
+X     ASSERT(IsEmpty());
+X
+X     // make sure everything came out in the right order
+X     for (i = 0; i < (numEntries - 1); i++) {
+X	 ASSERT(compare(q[i], q[i + 1]) <= 0);
+X     }
+X     SanityCheck();
+X
+X     delete q;
+}
+SHAR_EOF
+  $shar_touch -am 0222140996 'list.cc' &&
+  chmod 0644 'list.cc' ||
+  echo 'restore of list.cc failed'
+  shar_count="`wc -c < 'list.cc'`"
+  test 10126 -eq "$shar_count" ||
+    echo "list.cc: original size 10126, current size $shar_count"
+fi
+# ============= sysdep.cc ==============
+if test -f 'sysdep.cc' && test X"$1" != X"-c"; then
+  echo 'x - skipping sysdep.cc (file already exists)'
+else
+  echo 'x - extracting sysdep.cc (text)'
+  sed 's/^X//' << 'SHAR_EOF' > 'sysdep.cc' &&
+// sysdep.cc
+//	Implementation of system-dependent interface.  Nachos uses the 
+//	routines defined here, rather than directly calling the UNIX library,
+//	to simplify porting between versions of UNIX, and even to
+//	other systems, such as MSDOS.
+//
+//	On UNIX, almost all of these routines are simple wrappers
+//	for the underlying UNIX system calls.
+//
+//	NOTE: all of these routines refer to operations on the underlying
+//	host machine (e.g., the DECstation, SPARC, etc.), supporting the 
+//	Nachos simulation code.  Nachos implements similar operations,
+//	(such as opening a file), but those are implemented in terms
+//	of hardware devices, which are simulated by calls to the underlying
+//	routines in the host workstation OS.
+//
+//	This file includes lots of calls to C routines.  C++ requires
+//	us to wrap all C definitions with a "extern "C" block".
+// 	This prevents the internal forms of the names from being
+// 	changed by the C++ compiler.
+//
+// Copyright (c) 1992-1996 The Regents of the University of California.
+// All rights reserved.  See copyright.h for copyright notice and limitation 
+// of liability and disclaimer of warranty provisions.
+X
+#include "copyright.h"
+#include "debug.h"
+#include "sysdep.h"
+#include "stdlib.h"
+#include "unistd.h"
+#include "sys/time.h"
+#include "sys/file.h"
+#include <sys/socket.h>
+#include <sys/un.h>
+X
+#ifdef LINUX	 // at this point, linux doesn't support mprotect 
+#define NO_MPROT     
+#endif
+#ifdef DOS	// neither does DOS
+#define NO_MPROT
+#endif
+X
+extern "C" {
+#include <signal.h>
+#include <sys/types.h>
+X
+#ifndef NO_MPROT 
+#include <sys/mman.h>
+#endif
+X
+// UNIX routines called by procedures in this file 
+X
+int getpagesize(void);
+unsigned sleep(unsigned);
+X
+#ifndef NO_MPROT	
+X
+#ifdef OSF
+#define OSF_OR_AIX
+#endif
+#ifdef AIX
+#define OSF_OR_AIX
+#endif
+X
+#ifdef OSF_OR_AIX
+int mprotect(const void *, long unsigned int, int);
+#else
+int mprotect(char *, unsigned int, int);
+#endif
+#endif
+X
+#ifdef NETWORK		// tend to generate spurious errors in g++
+X			// so only include if really needed
+#ifdef BSD
+int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+X             struct timeval *timeout);
+#else
+int select(int numBits, void *readFds, void *writeFds, void *exceptFds, 
+X	struct timeval *timeout);
+#endif
+int socket(int, int, int);
+// int bind (int, const void*, int);
+// int recvfrom (int, void*, int, int, void*, int *);
+// int sendto (int, const void*, int, int, void*, int);
+#endif
+X
+}
+X
+//----------------------------------------------------------------------
+// CallOnUserAbort
+// 	Arrange that "func" will be called when the user aborts (e.g., by
+//	hitting ctl-C.
+//----------------------------------------------------------------------
+X
+void 
+CallOnUserAbort(void (*func)(int))
+{
+X    (void)signal(SIGINT, func);
+}
+X
+//----------------------------------------------------------------------
+// Sleep
+// 	Put the UNIX process running Nachos to sleep for x seconds,
+//	to give the user time to start up another invocation of Nachos
+//	in a different UNIX shell.
+//----------------------------------------------------------------------
+X
+void 
+Delay(int seconds)
+{
+X    (void) sleep((unsigned) seconds);
+}
+X
+//----------------------------------------------------------------------
+// Abort
+// 	Quit and drop core.
+//----------------------------------------------------------------------
+X
+void 
+Abort()
+{
+X    abort();
+}
+X
+//----------------------------------------------------------------------
+// Exit
+// 	Quit without dropping core.
+//----------------------------------------------------------------------
+X
+void 
+Exit(int exitCode)
+{
+X    exit(exitCode);
+}
+X
+//----------------------------------------------------------------------
+// RandomInit
+// 	Initialize the pseudo-random number generator.  We use the
+//	now obsolete "srand" and "rand" because they are more portable!
+//----------------------------------------------------------------------
+X
+void 
+RandomInit(unsigned seed)
+{
+X    srand(seed);
+}
+X
+//----------------------------------------------------------------------
+// RandomNumber
+// 	Return a pseudo-random number.
+//----------------------------------------------------------------------
+X
+unsigned int 
+RandomNumber()
+{
+X    return rand();
+}
+X
+//----------------------------------------------------------------------
+// AllocBoundedArray
+// 	Return an array, with the two pages just before 
+//	and after the array unmapped, to catch illegal references off
+//	the end of the array.  Particularly useful for catching overflow
+//	beyond fixed-size thread execution stacks.
+//
+//	Note: Just return the useful part!
+//
+//	"size" -- amount of useful space needed (in bytes)
+//----------------------------------------------------------------------
+X
+char * 
+AllocBoundedArray(int size)
+{
+#ifdef NO_MPROT
+X    return new char[size];
+#else
+X    int pgSize = getpagesize();
+X    char *ptr = new char[pgSize * 2 + size];
+X
+X    mprotect(ptr, pgSize, 0);
+X    mprotect(ptr + pgSize + size, pgSize, 0);
+X    return ptr + pgSize;
+#endif
+}
+X
+//----------------------------------------------------------------------
+// DeallocBoundedArray
+// 	Deallocate an array of integers, unprotecting its two boundary pages.
+//
+//	"ptr" -- the array to be deallocated
+//	"size" -- amount of useful space in the array (in bytes)
+//----------------------------------------------------------------------
+X
+void 
+DeallocBoundedArray(char *ptr, int size)
+{
+#ifdef NO_MPROT
+X    delete [] ptr;
+#else
+X    int pgSize = getpagesize();
+X
+X    mprotect(ptr - pgSize, pgSize, PROT_READ | PROT_WRITE | PROT_EXEC);
+X    mprotect(ptr + size, pgSize, PROT_READ | PROT_WRITE | PROT_EXEC);
+X    delete [] (ptr - pgSize);
+#endif
+}
+X
+//----------------------------------------------------------------------
+// PollFile
+// 	Check open file or open socket to see if there are any 
+//	characters that can be read immediately.  If so, read them
+//	in, and return TRUE.
+//
+//	"fd" -- the file descriptor of the file to be polled
+//----------------------------------------------------------------------
+X
+bool
+PollFile(int fd)
+{
+X    int rfd = (1 << fd), wfd = 0, xfd = 0, retVal;
+X    struct timeval pollTime;
+X
+// don't wait if there are no characters on the file
+X    pollTime.tv_sec = 0;
+X    pollTime.tv_usec = 0;
+X
+// poll file or socket
+#ifdef BSD
+X    retVal = select(32, (fd_set*)&rfd, (fd_set*)&wfd, (fd_set*)&xfd, &pollTime);
+#else
+X    retVal = select(32, &rfd, &wfd, &xfd, &pollTime);
+#endif
+X
+X    ASSERT((retVal == 0) || (retVal == 1));
+X    if (retVal == 0)
+X	return FALSE;                 		// no char waiting to be read
+X    return TRUE;
+}
+X
+//----------------------------------------------------------------------
+// OpenForWrite
+// 	Open a file for writing.  Create it if it doesn't exist; truncate it 
+//	if it does already exist.  Return the file descriptor.
+//
+//	"name" -- file name
+//----------------------------------------------------------------------
+X
+int
+OpenForWrite(char *name)
+{
+X    int fd = open(name, O_RDWR|O_CREAT|O_TRUNC, 0666);
+X
+X    ASSERT(fd >= 0); 
+X    return fd;
+}
+X
+//----------------------------------------------------------------------
+// OpenForReadWrite
+// 	Open a file for reading or writing.
+//	Return the file descriptor, or error if it doesn't exist.
+//
+//	"name" -- file name
+//----------------------------------------------------------------------
+X
+int
+OpenForReadWrite(char *name, bool crashOnError)
+{
+X    int fd = open(name, O_RDWR, 0);
+X
+X    ASSERT(!crashOnError || fd >= 0);
+X    return fd;
+}
+X
+//----------------------------------------------------------------------
+// Read
+// 	Read characters from an open file.  Abort if read fails.
+//----------------------------------------------------------------------
+X
+void
+Read(int fd, char *buffer, int nBytes)
+{
+X    int retVal = read(fd, buffer, nBytes);
+X    ASSERT(retVal == nBytes);
+}
+X
+//----------------------------------------------------------------------
+// ReadPartial
+// 	Read characters from an open file, returning as many as are
+//	available.
+//----------------------------------------------------------------------
+X
+int
+ReadPartial(int fd, char *buffer, int nBytes)
+{
+X    return read(fd, buffer, nBytes);
+}
+X
+X
+//----------------------------------------------------------------------
+// WriteFile
+// 	Write characters to an open file.  Abort if write fails.
+//----------------------------------------------------------------------
+X
+void
+WriteFile(int fd, char *buffer, int nBytes)
+{
+X    int retVal = write(fd, buffer, nBytes);
+X    ASSERT(retVal == nBytes);
+}
+X
+//----------------------------------------------------------------------
+// Lseek
+// 	Change the location within an open file.  Abort on error.
+//----------------------------------------------------------------------
+X
+void 
+Lseek(int fd, int offset, int whence)
+{
+X    int retVal = lseek(fd, offset, whence);
+X    ASSERT(retVal >= 0);
+}
+X
+//----------------------------------------------------------------------
+// Tell
+// 	Report the current location within an open file.
+//----------------------------------------------------------------------
+X
+int 
+Tell(int fd)
+{
+#ifdef BSD
+X    return lseek(fd,0,SEEK_CUR); // 386BSD doesn't have the tell() system call
+#else
+X    return tell(fd);
+#endif
+}
+X
+X
+//----------------------------------------------------------------------
+// Close
+// 	Close a file.  Abort on error.
+//----------------------------------------------------------------------
+X
+void 
+Close(int fd)
+{
+X    int retVal = close(fd);
+X    ASSERT(retVal >= 0); 
+}
+X
+//----------------------------------------------------------------------
+// Unlink
+// 	Delete a file.
+//----------------------------------------------------------------------
+X
+bool 
+Unlink(char *name)
+{
+X    return unlink(name);
+}
+X
+#ifdef NETWORK
+//----------------------------------------------------------------------
+// OpenSocket
+// 	Open an interprocess communication (IPC) connection.  For now, 
+//	just open a datagram port where other Nachos (simulating 
+//	workstations on a network) can send messages to this Nachos.
+//----------------------------------------------------------------------
+X
+int
+OpenSocket()
+{
+X    int sockID;
+X    
+X    sockID = socket(AF_UNIX, SOCK_DGRAM, 0);
+X    ASSERT(sockID >= 0);
+X
+X    return sockID;
+}
+X
+//----------------------------------------------------------------------
+// CloseSocket
+// 	Close the IPC connection. 
+//----------------------------------------------------------------------
+X
+void
+CloseSocket(int sockID)
+{
+X    (void) close(sockID);
+}
+X
+//----------------------------------------------------------------------
+// InitSocketName
+// 	Initialize a UNIX socket address -- magical!
+//----------------------------------------------------------------------
+X
+static void 
+InitSocketName(struct sockaddr_un *uname, char *name)
+{
+X    uname->sun_family = AF_UNIX;
+X    strcpy(uname->sun_path, name);
+}
+X
+//----------------------------------------------------------------------
+// AssignNameToSocket
+// 	Give a UNIX file name to the IPC port, so other instances of Nachos
+//	can locate the port. 
+//----------------------------------------------------------------------
+X
+void
+AssignNameToSocket(char *socketName, int sockID)
+{
+X    struct sockaddr_un uName;
+X    int retVal;
+X
+X    (void) unlink(socketName);    // in case it's still around from last time
+X
+X    InitSocketName(&uName, socketName);
+X    retVal = bind(sockID, (struct sockaddr *) &uName, sizeof(uName));
+X    ASSERT(retVal >= 0);
+X    DEBUG(dbgNet, "Created socket " << socketName);
+}
+X
+//----------------------------------------------------------------------
+// DeAssignNameToSocket
+// 	Delete the UNIX file name we assigned to our IPC port, on cleanup.
+//----------------------------------------------------------------------
+void
+DeAssignNameToSocket(char *socketName)
+{
+X    (void) unlink(socketName);
+}
+X
+//----------------------------------------------------------------------
+// PollSocket
+// 	Return TRUE if there are any messages waiting to arrive on the
+//	IPC port.
+//----------------------------------------------------------------------
+bool
+PollSocket(int sockID)
+{
+X    return PollFile(sockID);	// on UNIX, socket ID's are just file ID's
+}
+X
+//----------------------------------------------------------------------
+// ReadFromSocket
+// 	Read a fixed size packet off the IPC port.  Abort on error.
+//----------------------------------------------------------------------
+void
+ReadFromSocket(int sockID, char *buffer, int packetSize)
+{
+X    int retVal;
+X    extern int errno;
+X    struct sockaddr_un uName;
+X    int size = sizeof(uName);
+X   
+X    retVal = recvfrom(sockID, buffer, packetSize, 0,
+X				   (struct sockaddr *) &uName, &size);
+X
+X    if (retVal != packetSize) {
+X        perror("in recvfrom");
+X        cerr << "called with " << packetSize << ", got back " << retVal 
+X						<< ", and " << errno << "\n";
+X    }
+X    ASSERT(retVal == packetSize);
+}
+X
+//----------------------------------------------------------------------
+// SendToSocket
+// 	Transmit a fixed size packet to another Nachos' IPC port.
+//	Abort on error.
+//----------------------------------------------------------------------
+void
+SendToSocket(int sockID, char *buffer, int packetSize, char *toName)
+{
+X    struct sockaddr_un uName;
+X    int retVal;
+X
+X    InitSocketName(&uName, toName);
+X    retVal = sendto(sockID, buffer, packetSize, 0, 
+X			(struct sockaddr *) &uName, sizeof(uName));
+X    ASSERT(retVal == packetSize);
+}
+#endif
+SHAR_EOF
+  $shar_touch -am 0418023196 'sysdep.cc' &&
+  chmod 0644 'sysdep.cc' ||
+  echo 'restore of sysdep.cc failed'
+  shar_count="`wc -c < 'sysdep.cc'`"
+  test 13316 -eq "$shar_count" ||
+    echo "sysdep.cc: original size 13316, current size $shar_count"
+fi
+exit 0

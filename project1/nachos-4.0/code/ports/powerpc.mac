@@ -1,0 +1,2 @@
+# Apple Macintosh PowerPC, OS = System 7
+HOST = -DPowerPC -DSYS7 -DHOST_IS_BIG_ENDIAN

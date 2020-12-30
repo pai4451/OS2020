@@ -1,0 +1,16 @@
+I've spent some time working with Nachos to get it to compile and run
+successfully under DOS, using Dos Protected Mode, Borland C++ 4.02. I'm
+happy to report it does run (perfectly, as far as I can tell), and in the
+process I've discovered several "bugs", or at least changes that I think
+should be made. So, here's the list of changes I made to my copy.
+
+
+Changes for Borland (#ifdef __BORANDC__)
+----------------------------------------
+ * Since Borland does not define "bool", "false", or "true", I defined these
+ in copyright.h (since it's the only thing #included everywhere..:) ). Of
+ course, these definitions should be wrapped in an #ifdef.
+
+  * Borland chokes on the max/min #defines in utility.h because it wants to
+  use inline templates for these. Not sure what best solution is, I #ifdef'd
+  them out.

@@ -1,0 +1,3 @@
+# SGI, instruction set = MIPS, OS = Irix
+# port not done yet
+HOST = -DSGIMIPS -DIRIX -DHOST_IS_BIG_ENDIAN

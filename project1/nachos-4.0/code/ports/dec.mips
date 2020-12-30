@@ -1,0 +1,3 @@
+# Decstations, instruction set = MIPS, OS = Ultrix
+HOST = -DDECMIPS -DULTRIX
+DISASM = disasm

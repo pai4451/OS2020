@@ -1,0 +1,161 @@
+# This is part of a GNU Makefile, included by the Makefiles in
+# each of the subdirectories.  
+#
+# This file includes all of the baseline code provided by Nachos.
+# Whenever you add a .h or .cc file, put it in the appropriate 
+# _H,_C, or _O list.
+#
+# The dependency graph between assignments is:
+#   1. THREADS before everything else
+#   2. USERPROG must come before VM
+#   3. USERPROG can come before or after FILESYS, but if USERPROG comes 
+#	before (as in this distribution), then it must define FILESYS_STUB
+#
+#   Other than that, you have complete flexibility.
+#
+# Also whenever you change the include structure of your program, you should 
+# do a gmake depend in the subdirectory -- this will modify the Makefile
+# to keep track of the new dependency.
+
+# You might want to play with the CFLAGS, but if you use -O it may
+# break the thread system.  You might want to use -fno-inline if
+# you need to call some inline functions from the debugger.
+
+# Copyright (c) 1992-1996 The Regents of the University of California.
+# All rights reserved.  See copyright.h for copyright notice and limitation 
+# of liability and disclaimer of warranty provisions.
+
+CFLAGS = -g -Wall $(INCPATH) $(DEFINES) $(HOST) -DCHANGED
+LDFLAGS =
+
+# These definitions may change as the software is updated.
+# Some of them are also system dependent
+CPP=/lib/cpp
+CC = g++ -Wno-deprecated
+LD = g++ -Wno-deprecated
+AS = as
+
+PROGRAM = nachos
+
+THREAD_H = ../lib/bitmap.h\
+	../lib/copyright.h\
+	../lib/debug.h\
+	../lib/hash.h\
+	../lib/libtest.h\
+	../lib/list.h\
+	../lib/sysdep.h\
+	../lib/utility.h\
+	../machine/callback.h\
+	../machine/interrupt.h\
+	../machine/stats.h\
+	../machine/timer.h\
+	../threads/alarm.h\
+	../threads/kernel.h\
+	../threads/main.h\
+	../threads/scheduler.h\
+	../threads/switch.h\
+	../threads/synch.h\
+	../threads/synchlist.h\
+	../threads/thread.h\
+	../machine/elevator.h\
+	../machine/elevatortest.h
+
+THREAD_C = ../lib/bitmap.cc\
+	../lib/debug.cc\
+	../lib/hash.cc\
+	../lib/libtest.cc\
+	../lib/list.cc\
+	../lib/sysdep.cc\
+	../machine/interrupt.cc\
+	../machine/stats.cc\
+	../machine/timer.cc\
+	../threads/alarm.cc\
+	../threads/kernel.cc\
+	../threads/main.cc\
+	../threads/scheduler.cc\
+	../threads/synch.cc\
+	../threads/synchlist.cc\
+	../threads/thread.cc\
+	../machine/elevatortest.cc\
+	../machine/elevator.cc
+
+THREAD_S = ../threads/switch.s
+
+THREAD_O = bitmap.o debug.o libtest.o sysdep.o interrupt.o stats.o timer.o \
+	alarm.o kernel.o main.o scheduler.o synch.o thread.o elevator.o \
+	elevatortest.o
+
+USERPROG_H = ../userprog/addrspace.h\
+	../userprog/userkernel.h\
+	../userprog/syscall.h\
+	../userprog/synchconsole.h\
+        ../filesys/filesys.h\
+        ../filesys/openfile.h\
+        ../machine/console.h\
+        ../machine/machine.h\
+        ../machine/mipssim.h\
+        ../machine/translate.h\
+	../filesys/synchdisk.h\
+	../machine/disk.h
+
+USERPROG_C = ../userprog/addrspace.cc\
+        ../userprog/exception.cc\
+	../userprog/synchconsole.cc\
+	../userprog/userkernel.cc\
+        ../machine/console.cc\
+        ../machine/machine.cc\
+        ../machine/mipssim.cc\
+        ../machine/translate.cc\
+	../filesys/synchdisk.cc\
+	../machine/disk.cc
+
+USERPROG_O = addrspace.o exception.o synchconsole.o console.o machine.o \
+        mipssim.o translate.o userkernel.o synchdisk.o disk.o
+
+FILESYS_H = ../filesys/directory.h\
+        ../filesys/filehdr.h\
+        ../filesys/filesys.h\
+        ../filesys/openfile.h\
+        ../filesys/pbitmap.h
+
+FILESYS_C = ../filesys/directory.cc\
+        ../filesys/filesys.cc\
+        ../filesys/openfile.cc\
+        ../filesys/filehdr.cc\
+        ../filesys/fstest.cc\
+        ../filesys/pbitmap.cc
+
+FILESYS_O = directory.o filesys.o openfile.o filehdr.o fstest.o\
+        pbitmap.o
+
+NETWORK_H = ../network/netkernel.h ../network/post.h ../machine/network.h
+
+NETWORK_C = ../network/netkernel.cc ../network/post.cc ../machine/network.cc
+
+NETWORK_O = netkernel.o post.o network.o
+
+S_OFILES = switch.o
+
+OFILES = $(C_OFILES) $(S_OFILES)
+
+$(PROGRAM): $(OFILES)
+	$(LD) $(OFILES) $(LDFLAGS) -o $(PROGRAM)
+
+$(C_OFILES): %.o:
+	$(CC) $(CFLAGS) -c $<
+
+switch.o: ../threads/switch.s
+	$(CPP) $(CPP_AS_FLAGS) -P $(INCPATH) $(HOST) ../threads/switch.s > swtch.s
+	$(AS) -o switch.o swtch.s
+
+depend: $(CFILES) $(HFILES)
+	$(CC) $(INCPATH) $(DEFINES) $(HOST) -M $(CFILES) > makedep
+	echo '/^# DO NOT DELETE THIS LINE/+2,$$d' >eddep
+	echo '$$r makedep' >>eddep
+	echo 'w' >>eddep
+	echo 'q' >>eddep
+	ed - Makefile < eddep
+	rm eddep makedep 
+	echo '# DEPENDENCIES MUST END AT END OF FILE' >> Makefile
+	echo '# IF YOU PUT STUFF HERE IT WILL GO AWAY' >> Makefile
+	echo '# see make depend above' >> Makefile

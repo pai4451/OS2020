@@ -1,0 +1,4 @@
+# CPU = x86, OS = BSDI
+HOST = -Dx86 -DBSDI -DBSD
+CPP=/usr/bin/cpp
+DISASM = disasm
