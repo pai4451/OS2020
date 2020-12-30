@@ -347,7 +347,8 @@ else if (!pageTable[vpn].valid) {
 
 ### Results
 In this section, we demonstrate the experimental result. Note that we comment out random replacement algorithm in the submitted code. Therefore, by default our code will use LRU.
-A. LRU<br>
+
+**A. LRU**
 
 **1. Sort**
 
@@ -409,7 +410,7 @@ Paging: faults 5345
 Network I/O: packets received 0, sent 0
 ```
 
-B. Random<br>
+**B. Random**
 
 **1. Sort**
 
