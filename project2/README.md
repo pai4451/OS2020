@@ -1,6 +1,6 @@
 # Operating Systems Homework #2
 ## System Call & CPU Scheduling
-
+> [Project slides](https://hackmd.io/@2xu_sb9JT2KDaAH-UKS7PA/HkqwUPuOw#/)
 ### Part 1 - System call
 ### Motivation
 In this homework, we have to implement a system call `Sleep()`. First, we need to define a system call number for Sleep in `/code/userprog/syscall.h`. Second, we have to modify `/code/test/start.s` to prepare registers for Sleep. Third, we add a new case for Sleep in ExceptionHandler in `/code/userprog/exception.cc`. Last but not least, we will modify `/code/threads/alarm.h` and `/code/threads/alarm.cc` to generate an interrupt every X time ticks. The `WaitUntil()` function will be called when a thread going to sleep, and the `CallBack()` function will check which thread should wake up.
