@@ -1,0 +1,4 @@
+echo "Please choose which machine you will use to run Nachos" 
+echo "Copy appropriate file from ports/ into Makefile.dep" 
+echo "Then run make depend"
+exit 1;
