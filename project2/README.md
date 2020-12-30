@@ -287,7 +287,6 @@ Disk I/O: reads 0, writes 0
 Console I/O: reads 0, writes 0
 Paging: faults 0
 Network I/O: packets received 0, sent 0
-....
 ```
 ---
 ### Part 2 - CPU Scheduling
