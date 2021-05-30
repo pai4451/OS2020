@@ -1,5 +1,4 @@
 # OS2020 Nachos Project
-
 Operating Systems (NTU EE 5173, Fall 2020)<br>
 Instructor: Farn Wang<br>
 Course website: http://cc.ee.ntu.edu.tw/~farn/courses/OS/OS2020/index.htm
